@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phone Queue QR Code</title>
+</head>
+<body>
+    <h1>Scan the QR Code</h1>
+    <img src="static/phone_queue_qr.png" alt="Phone Queue QR Code">
+    <ul>
+        {% for phone in queue %}
+        <li>Phone Number: {{ phone.phone_number }}, Device ID: {{ phone.device_id }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
