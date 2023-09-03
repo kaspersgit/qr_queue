@@ -1,0 +1,40 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    async function populateForm() {
+      let response = await fetch('/getcookie');
+      let userId = await response.text();
+      document.getElementById('userid').value = userId;
+    }
+  </script>
+</head>
+
+<body onload="populateForm()">
+
+<form>
+
+  <label for="userid">User ID:</label>
+  <input type="text" id="userid"<br>
+
+  <button type="submit" formaction="/scan">Add to/Remove from queue</button>
+  <input type="hidden" name="userid" id="userid-for-actions">
+
+  <button type="submit" formaction="/position">Get position in queue</button>
+
+</form>
+
+<script>
+  const form = document.querySelector('form');
+  const useridInput = document.querySelector('#userid');
+  const hiddenName = document.querySelector('#userid-for-actions');
+
+  form.addEventListener('submit', () => {
+    hiddenName.value = useridInput.value;
+  });
+</script>
+
+</body>
+</html>
