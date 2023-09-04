@@ -1,8 +1,13 @@
 <html>
-   <body>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <title>Virtual queue</title>
+</head>
+<body>
 
       <form action = "/setcookie" method = "POST">
-         <p><h3>Enter userID</h3></p>
+         <p><h1>Enter userID</h1></p>
          <p><input type = 'text' name = 'nm'/></p>
          <p><input type = 'submit' value = 'Login'/></p>
       </form>

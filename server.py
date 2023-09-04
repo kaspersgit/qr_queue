@@ -3,7 +3,9 @@ from queue_manager import QueueManager
 from qr_code_generator import QRCodeGenerator
 import hashlib
 
+
 app = Flask(__name__)
+
 queue_manager = QueueManager()
 qr_code_generator = QRCodeGenerator()
 
@@ -16,7 +18,7 @@ def setcookie():
     if request.method == 'POST':
         user = request.form['nm']
 
-    resp = make_response(render_template('readcookie.html'))
+    resp = make_response(render_template('readcookie.html', user=user))
     resp.set_cookie('userID', user)
 
     return resp
@@ -57,21 +59,18 @@ def get_queue():
 
 @app.route('/position', methods=['GET'])
 def get_position():
-    user_agent = request.headers.get('User-Agent')
-    ip_address = request.remote_addr
-    # identifier = request.cookies.get('userID')
-    identifier = request.args.get('userid')
-
-    if identifier:
-        position = queue_manager.get_position(identifier)
-        if position is not None:
-            return jsonify({'position': position, 'expected_time_left': f'{position * 2} minutes'}), 200
-        return jsonify({f"message': 'Following user is not found in the queue: {identifier}"}), 404
+    # identifier = request.values.get('userid')
+    #
+    # if identifier:
+    #     position = queue_manager.get_position(identifier)
+    #     if position is not None:
+    #         return jsonify({'position': position, 'expected_time_left': f'{position * 2} minutes'}), 200
+    #     return jsonify({f"message': 'Following user is not found in the queue: {identifier}"}), 404
     return jsonify({'message': 'Invalid request.'}), 400
 
 def remove_first_phone():
     queue_manager.remove_from_queue()
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0")
+    app.run(port=5000)
 

@@ -15,7 +15,7 @@ class QueueManager:
     def get_queue(self) -> List[str]:
         return self.queue
 
-    def get_position(self, phone_id: str) -> Optional[int]:
-        if phone_id in self.queue:
-            return self.queue.index(phone_id)
+    def get_position(self, user_id: str) -> Optional[int]:
+        if user_id in self.queue:
+            return self.queue.index(user_id)
         return None
