@@ -39,8 +39,6 @@ def scan():
     # identifier = request.cookies.get('userID')
     identifier = request.args.get('userid')
 
-    # identifier = hashlib.sha256(f"{user_agent}{ip_address}{cookies}".encode()).hexdigest()
-
     if identifier:
         position = queue_manager.get_position(identifier)
 
@@ -59,14 +57,14 @@ def get_queue():
 
 @app.route('/position', methods=['GET'])
 def get_position():
-    # identifier = request.values.get('userid')
-    #
-    # if identifier:
-    #     position = queue_manager.get_position(identifier)
-    #     if position is not None:
-    #         return jsonify({'position': position, 'expected_time_left': f'{position * 2} minutes'}), 200
-    #     return jsonify({f"message': 'Following user is not found in the queue: {identifier}"}), 404
-    return jsonify({'message': 'Invalid request.'}), 400
+    identifier = request.values.get('userid')
+
+    if identifier is not None:
+        position = queue_manager.get_position(identifier)
+        if position is not None:
+            return jsonify({'position': position, 'expected_time_left': f'{position * 2} minutes'}), 200
+        return jsonify({f"message': 'Following user is not found in the queue: {identifier}"}), 200
+    return jsonify({'message': 'Invalid request.'}), 200
 
 def remove_first_phone():
     queue_manager.remove_from_queue()
