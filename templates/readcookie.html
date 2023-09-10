@@ -7,7 +7,9 @@
 </head>
 <body>
 
-    <p>Your user ID ({{ user }}) has been added as a cookie for future use</p>
+    <p>Your user ID: {{ userid }} has been registered.</p>
+    <p>Your generated assigned name: {{ username }}</p>
+    <p>You can use either your user ID or your assigned name when queuing. The name is added as a cookie for future use</p>
       <form action = "/usermenu" method = "GET">
          <p><input type = 'submit' value = 'Great!'/></p>
       </form>

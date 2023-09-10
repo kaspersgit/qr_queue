@@ -9,6 +9,25 @@ app = Flask(__name__)
 queue_manager = QueueManager()
 qr_code_generator = QRCodeGenerator()
 
+# Get simplified assigned name from userid
+def getAssignedName(userid):
+    if len(userid) < 1:
+        aname = 'ShortBoy'
+    elif len(userid) < 2:
+        aname = 'FlightKid'
+    elif len(userid) < 3:
+        aname = 'SumoCar'
+    elif len(userid) < 4:
+        aname = 'BoatStop'
+    elif len(userid) < 5:
+        aname = 'TrafficMan'
+    elif len(userid) < 6:
+        aname = 'PunchGirl'
+    else:
+        aname = 'BossType'
+
+    return aname
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -16,20 +35,29 @@ def index():
 @app.route('/setcookie', methods=['POST', 'GET'])
 def setcookie():
     if request.method == 'POST':
-        user = request.form['nm']
+        userid = request.form['nm']
+        username = getAssignedName(str(userid))
 
-    resp = make_response(render_template('readcookie.html', user=user))
-    resp.set_cookie('userID', user)
+
+    resp = make_response(render_template('readcookie.html', userid=userid, username=username))
+    resp.set_cookie('userID', userid)
+    resp.set_cookie('userName', username)
 
     return resp
 
 @app.route('/getcookie', methods=['GET'])
 def getcookie():
-    return request.cookies.get('userID')
+    return [request.cookies.get('userID'), request.cookies.get('userName')]
 
 @app.route('/usermenu', methods=['GET'])
 def usermenu():
-    resp = make_response(render_template('usermenu.html'))
+    identifier = request.cookies.get('userName')
+
+    if identifier:
+        position = queue_manager.get_position(identifier)
+    else:
+        position = None
+    resp = make_response(render_template('usermenu.html', position=position, identifier=identifier))
     return resp
 
 @app.route('/scan', methods=['GET'])
@@ -57,18 +85,20 @@ def get_queue():
 
 @app.route('/position', methods=['GET'])
 def get_position():
-    identifier = request.values.get('userid')
+    userid = request.values.get('userid')
 
-    if identifier is not None:
-        position = queue_manager.get_position(identifier)
-        if position is not None:
-            return jsonify({'position': position, 'expected_time_left': f'{position * 2} minutes'}), 200
-        return jsonify({f"message': 'Following user is not found in the queue: {identifier}"}), 200
-    return jsonify({'message': 'Invalid request.'}), 200
+    if userid:
+        position = queue_manager.get_position(userid) + 1
+
+    if position is not None:
+        resp = make_response(render_template('queue_position.html', userid=userid, position=position, timeleft=(position - 1) * 2))
+        return resp
+    return jsonify({f"message": "Following user is not found in the queue: boom"}), 200
+
 
 def remove_first_phone():
     queue_manager.remove_from_queue()
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5000, debug=True)
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <title>Queue Status</title>
+</head>
+<body>
+  <p>Your userid: {{ userid }}</p>
+
+  <p>Spot in queue: {{ position }}</p>
+
+  <p>Estimated time left: {{ timeleft }}</p>
+</body>
+</html>

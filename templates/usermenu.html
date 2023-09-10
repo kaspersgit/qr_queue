@@ -9,7 +9,12 @@
   <script>
     async function populateForm() {
       let response = await fetch('/getcookie');
-      let userId = await response.text();
+
+      // Get response as JSON
+      let data = await response.json();
+
+      // data is a list
+      let userId = data[1];
       document.getElementById('userid').value = userId;
     }
   </script>
@@ -20,7 +25,7 @@
 <form>
 
   <label for="userid">User ID:</label>
-  <input type="text" id="userid"<br>
+  <input type="text" id="userid">
   <input type="hidden" name="userid" id="userid-for-actions">
 
   <button type="submit" formaction="/scan">Add to/Remove from queue</button>
@@ -30,6 +35,9 @@
   <button type="submit" formaction="/queue">See queue</button>
 
 </form>
+
+<p>Current User id: {{ identifier }}</p>
+<p>Current queue position: {{ position }}</p>
 
 <script>
   const form = document.querySelector('form');
